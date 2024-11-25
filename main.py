@@ -137,5 +137,6 @@ iface = gr.Interface(
     description="上傳一個10萬字以內 .docx 文件的文件，使用 AI 實現紮根理論三層結構分析自動化，并顯示每層结果和結構圖。"
 )
 
-# 启动界面
-iface.launch(share=True)
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 7860))  # 默认为 7860
+    iface.launch(server_name="0.0.0.0", server_port=port, share=True)
