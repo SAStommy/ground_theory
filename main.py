@@ -6,13 +6,18 @@ import os
 
 client = OpenAI(
     api_key= os.getenv("OPENAI_API_KEY")
-)    
+)
+
+# 设置文件路径为 /tmp 目录
+grounded_theory_tree_path = "/tmp/grounded_theory_tree.png"
+grounded_theory_tree_source = "/tmp/grounded_theory_tree"
+    
 
 def generategraph(code_string):
-    if os.path.exists("grounded_theory_tree"):
-        os.remove("grounded_theory_tree")
-    if os.path.exists("grounded_theory_tree.png"):
-        os.remove("grounded_theory_tree.png")
+    if os.path.exists(grounded_theory_tree_path):
+        os.remove(grounded_theory_tree_path )
+    if os.path.exists(grounded_theory_tree_source):
+        os.remove(grounded_theory_tree_source)
         
     # 将代码写入文件
     with open("functiongraph.py", "w", encoding="utf-8") as f:
@@ -101,7 +106,7 @@ def getgraphcode(result):
                         dot.edge("AxialCodingLabel", node_id, style="dashed")\n
                    for node_id in selective_coding_nodes:\n
                         dot.edge("SelectiveCodingLabel", node_id, style="dashed")\n
-                   dot.render(filename='grounded_theory_tree', format='png')\n
+                   dot.render(filename=grounded_theory_tree_source, format='png')\n
                    只需要回傳python程式碼, 不需要任何描述"""}]
     )
     code_string = code_response.choices[0].message.content
@@ -119,7 +124,7 @@ def main(files):
         content = load_docx_data(files)  # 注意这里是 files，而不是 file
         analysis_result = grounded_theory_analysis(content)
         generategraph(getgraphcode(analysis_result))
-        return analysis_result, None, None
+        return analysis_result, grounded_theory_tree_path, grounded_theory_tree_path
     else:
         return "请上传一个 .docx 文件。", None, None
 
